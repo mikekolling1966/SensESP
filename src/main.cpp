@@ -18,95 +18,221 @@ void setup() {
                     ->set_hostname("my-sensesp-project")
                     ->get_app();
 
-  const uint8_t kAnalogInputPin = 36;
   const unsigned int kAnalogInputReadInterval = 500;
 
+
+  const uint8_t kAnalogInputPin0 = 36;
+  const uint8_t kAnalogInputPin1 = 39;
+  const uint8_t kAnalogInputPin2 = 34;
+  const uint8_t kAnalogInputPin3 = 35;
+
+  
+  
+  // ONE
   // ONE sensor for raw ADC (scale = 1.0)
-  auto analog_input_raw = std::make_shared<AnalogInput>(
-    kAnalogInputPin, kAnalogInputReadInterval, "", 1.0);
+  auto analog_input_raw0 = std::make_shared<AnalogInput>(
+    kAnalogInputPin0, kAnalogInputReadInterval, "", 1.0);
 
   // ONE sensor for voltage (scale = 3.3 / 4095.0)
-  auto analog_input_voltage = std::make_shared<AnalogInput>(
-    kAnalogInputPin, kAnalogInputReadInterval, "", 3.3 / 4095.0);
+  auto analog_input_voltage0 = std::make_shared<AnalogInput>(
+    kAnalogInputPin0, kAnalogInputReadInterval, "", 3.3 / 4095.0);
 
   // Debug print the raw ADC value
-  analog_input_raw->attach([analog_input_raw]() {
-    debugD("Analog input raw value: %f", analog_input_raw->get());
+  analog_input_raw0->attach([analog_input_raw0]() {
+    debugD("Analog input raw 0 value: %f", analog_input_raw0->get());
   });
 
-  // Digital output toggler on GPIO 15
-  const uint8_t kDigitalOutputPin = 15;
-  const unsigned int kDigitalOutputInterval = 650;
-  pinMode(kDigitalOutputPin, OUTPUT);
-  event_loop()->onRepeat(kDigitalOutputInterval, [kDigitalOutputPin]() {
-    digitalWrite(kDigitalOutputPin, !digitalRead(kDigitalOutputPin));
+  //TWO
+  // ONE sensor for raw ADC (scale = 1.0)
+  auto analog_input_raw1 = std::make_shared<AnalogInput>(
+    kAnalogInputPin1, kAnalogInputReadInterval, "", 1.0);
+
+  // ONE sensor for voltage (scale = 3.3 / 4095.0)
+  auto analog_input_voltage1 = std::make_shared<AnalogInput>(
+    kAnalogInputPin1, kAnalogInputReadInterval, "", 3.3 / 4095.0);
+
+  // Debug print the raw ADC value
+  analog_input_raw1->attach([analog_input_raw1]() {
+    debugD("Analog input raw 1 value: %f", analog_input_raw1->get());
   });
 
-  // Digital input 1 (GPIO 14)
-  const uint8_t kDigitalInput1Pin = 14;
-  auto digital_input1 = std::make_shared<DigitalInputChange>(
-    kDigitalInput1Pin, INPUT_PULLUP, CHANGE);
 
-  auto digital_input1_consumer = std::make_shared<LambdaConsumer<bool>>(
-    [](bool input) { debugD("Digital input value changed: %d", input); });
+//THREE
+  // ONE sensor for raw ADC (scale = 1.0)
+  auto analog_input_raw2 = std::make_shared<AnalogInput>(
+    kAnalogInputPin2, kAnalogInputReadInterval, "", 1.0);
 
-  digital_input1->connect_to(digital_input1_consumer);
+  // ONE sensor for voltage (scale = 3.3 / 4095.0)
+  auto analog_input_voltage2 = std::make_shared<AnalogInput>(
+    kAnalogInputPin2, kAnalogInputReadInterval, "", 3.3 / 4095.0);
 
-  // Digital input 2 (GPIO 13)
-  const uint8_t kDigitalInput2Pin = 13;
-  const unsigned int kDigitalInput2Interval = 1000;
+  // Debug print the raw ADC value
+  analog_input_raw2->attach([analog_input_raw2]() {
+    debugD("Analog input raw 2 value: %f", analog_input_raw2->get());
+  });
 
-  pinMode(kDigitalInput2Pin, INPUT_PULLUP);
 
-  auto digital_input2 = std::make_shared<RepeatSensor<bool>>(
-    kDigitalInput2Interval,
-    [kDigitalInput2Pin]() { return digitalRead(kDigitalInput2Pin); });
+  //FOUR
+  // ONE sensor for raw ADC (scale = 1.0)
+  auto analog_input_raw3 = std::make_shared<AnalogInput>(
+    kAnalogInputPin3, kAnalogInputReadInterval, "", 1.0);
+
+  // ONE sensor for voltage (scale = 3.3 / 4095.0)
+  auto analog_input_voltage3 = std::make_shared<AnalogInput>(
+    kAnalogInputPin3, kAnalogInputReadInterval, "", 3.3 / 4095.0);
+
+  // Debug print the raw ADC value
+  analog_input_raw3->attach([analog_input_raw3]() {
+    debugD("Analog input raw 3 value: %f", analog_input_raw3->get());
+  });
+
+
+
 
   // --- Signal K Outputs ---
 
+  //RAW ADC
+
+  //ONE
   // RAW ADC Output
-  auto adc_metadata = std::make_shared<SKMetadata>("", "Analog input raw ADC value");
-  auto adc_sk_output = std::make_shared<SKOutput<float>>(
-    "sensors.analog_input.adc",
-    "/Sensors/Analog Input/ADC Value",
-    adc_metadata
+  auto adc_metadata0 = std::make_shared<SKMetadata>("", "Analog input raw ADC value");
+  auto adc_sk_output0 = std::make_shared<SKOutput<float>>(
+    "sensors.analog_input.adc.0",
+    "/Sensors/Analog Input/ADC 0 Value",
+    adc_metadata0
   );
 
-  ConfigItem(adc_sk_output)
+  ConfigItem(adc_sk_output0)
     ->set_title("Analog Input ADC Raw Value SK Output Path")
     ->set_description("Publishes raw 0–4095 ADC reading")
     ->set_sort_order(100);
 
-  analog_input_raw->connect_to(adc_sk_output);
+  analog_input_raw0->connect_to(adc_sk_output0);
 
-  // Voltage Output
-  auto voltage_metadata = std::make_shared<SKMetadata>("V", "Analog input voltage");
-  auto voltage_sk_output = std::make_shared<SKOutput<float>>(
-    "sensors.analog_input.voltage",
-    "/Sensors/Analog Input/Voltage",
-    voltage_metadata
+
+//TWO
+  // RAW ADC Output 1
+  auto adc_metadata1 = std::make_shared<SKMetadata>("", "Analog input raw ADC value");
+  auto adc_sk_output1 = std::make_shared<SKOutput<float>>(
+    "sensors.analog_input.adc.1",
+    "/Sensors/Analog Input/ADC 1 Value",
+    adc_metadata1
   );
 
-  ConfigItem(voltage_sk_output)
+  ConfigItem(adc_sk_output1)
+    ->set_title("Analog Input ADC Raw Value SK Output Path")
+    ->set_description("Publishes raw 0–4095 ADC reading")
+    ->set_sort_order(100);
+
+  analog_input_raw1->connect_to(adc_sk_output1);
+
+
+
+//THREE
+  // RAW ADC Output 1
+  auto adc_metadata2 = std::make_shared<SKMetadata>("", "Analog input raw ADC value");
+  auto adc_sk_output2 = std::make_shared<SKOutput<float>>(
+    "sensors.analog_input.adc.2",
+    "/Sensors/Analog Input/ADC 2 Value",
+    adc_metadata2
+  );
+
+  ConfigItem(adc_sk_output2)
+    ->set_title("Analog Input ADC Raw Value SK Output Path")
+    ->set_description("Publishes raw 0–4095 ADC reading")
+    ->set_sort_order(100);
+
+  analog_input_raw2->connect_to(adc_sk_output2);
+
+//FOUR
+  // RAW ADC Output 1
+  auto adc_metadata3 = std::make_shared<SKMetadata>("", "Analog input raw ADC value");
+  auto adc_sk_output3 = std::make_shared<SKOutput<float>>(
+    "sensors.analog_input.adc.3",
+    "/Sensors/Analog Input/ADC 3 Value",
+    adc_metadata3
+  );
+
+  ConfigItem(adc_sk_output3)
+    ->set_title("Analog Input ADC Raw Value SK Output Path")
+    ->set_description("Publishes raw 0–4095 ADC reading")
+    ->set_sort_order(100);
+
+  analog_input_raw3->connect_to(adc_sk_output3);
+
+//
+//
+
+
+// VOLTAGES
+
+//ONE
+  // Voltage Output
+  auto voltage_metadata0 = std::make_shared<SKMetadata>("V", "Analog input voltage");
+  auto voltage_sk_output0 = std::make_shared<SKOutput<float>>(
+    "sensors.analog_input.voltage.0",
+    "/Sensors/Analog Input/Voltage",
+    voltage_metadata0
+  );
+
+  ConfigItem(voltage_sk_output0)
     ->set_title("Analog Input Voltage SK Output Path")
     ->set_description("Publishes scaled 0.0–3.3V reading")
     ->set_sort_order(110);
 
-  analog_input_voltage->connect_to(voltage_sk_output);
+  analog_input_voltage0->connect_to(voltage_sk_output0);
 
-  // Digital input 2 Output
-  auto di2_metadata = std::make_shared<SKMetadata>("", "Digital input 2 value");
-  auto di2_sk_output = std::make_shared<SKOutput<bool>>(
-    "sensors.digital_input2.value",
-    "/Sensors/Digital Input 2/Value",
-    di2_metadata
+
+//TWO
+  // Voltage Output
+  auto voltage_metadata1 = std::make_shared<SKMetadata>("V", "Analog input voltage");
+  auto voltage_sk_output1 = std::make_shared<SKOutput<float>>(
+    "sensors.analog_input.voltage.1",
+    "/Sensors/Analog Input/Voltage",
+    voltage_metadata1
   );
 
-  ConfigItem(di2_sk_output)
-    ->set_title("Digital Input 2 SK Output Path")
-    ->set_sort_order(200);
+  ConfigItem(voltage_sk_output1)
+    ->set_title("Analog Input Voltage SK Output Path")
+    ->set_description("Publishes scaled 0.0–3.3V reading")
+    ->set_sort_order(110);
 
-  digital_input2->connect_to(di2_sk_output);
+  analog_input_voltage1->connect_to(voltage_sk_output1);
+
+
+//THREE
+  // Voltage Output
+  auto voltage_metadata2 = std::make_shared<SKMetadata>("V", "Analog input voltage");
+  auto voltage_sk_output2 = std::make_shared<SKOutput<float>>(
+    "sensors.analog_input.voltage.2",
+    "/Sensors/Analog Input/Voltage",
+    voltage_metadata2
+  );
+
+  ConfigItem(voltage_sk_output2)
+    ->set_title("Analog Input Voltage SK Output Path")
+    ->set_description("Publishes scaled 0.0–3.3V reading")
+    ->set_sort_order(110);
+
+  analog_input_voltage2->connect_to(voltage_sk_output2);
+
+//FOUR
+  // Voltage Output
+  auto voltage_metadata3 = std::make_shared<SKMetadata>("V", "Analog input voltage");
+  auto voltage_sk_output3 = std::make_shared<SKOutput<float>>(
+    "sensors.analog_input.voltage.3",
+    "/Sensors/Analog Input/Voltage",
+    voltage_metadata3
+  );
+
+  ConfigItem(voltage_sk_output3)
+    ->set_title("Analog Input Voltage SK Output Path")
+    ->set_description("Publishes scaled 0.0–3.3V reading")
+    ->set_sort_order(110);
+
+  analog_input_voltage3->connect_to(voltage_sk_output3);
+
+
 
   while (true) {
     loop();
