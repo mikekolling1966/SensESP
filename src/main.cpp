@@ -7,11 +7,30 @@
 #include "sensesp/signalk/signalk_output.h"
 #include "sensesp/system/lambda_consumer.h"
 #include "sensesp_app_builder.h"
+#include <Adafruit_GFX.h>
+#include <Adafruit_ST7789.h>
+
+#define LCD_MOSI 23  // ESP32 D23
+#define LCD_SCLK 18  // ESP32 D18
+#define LCD_CS   15  // ESP32 D15
+#define LCD_DC   2   // ESP32 D2
+#define LCD_RST  4   // ESP32 D4
+#define LCD_BLK  32  // ESP32 D32
+
+Adafruit_ST7789 lcd = Adafruit_ST7789(LCD_CS, LCD_DC, LCD_RST);
+
+
+
+
+
 
 using namespace sensesp;
 
 void setup() {
   SetupLogging(ESP_LOG_DEBUG);
+
+  lcd.init(135, 240);
+  lcd.fillScreen(ST77XX_BLACK);
 
   SensESPAppBuilder builder;
   sensesp_app = (&builder)
