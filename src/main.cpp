@@ -1,4 +1,3 @@
-
 #include <memory>
 #include "sensesp.h"
 #include "sensesp/sensors/analog_input.h"
@@ -7,45 +6,19 @@
 #include "sensesp/signalk/signalk_output.h"
 #include "sensesp/system/lambda_consumer.h"
 #include "sensesp_app_builder.h"
-#include <Adafruit_GFX.h>
-#include <Adafruit_ST7789.h>
-#define LCD_MOSI 23  // ESP32 D23
-#define LCD_SCLK 18  // ESP32 D18
-#define LCD_CS   15  // ESP32 D15
-#define LCD_DC   2   // ESP32 D2
-#define LCD_RST  4   // ESP32 D4
-#define LCD_BLK  32  // ESP32 D32
-
-SPIClass mySPI(VSPI);  // VSPI hardware SPI bus (you can also use HSPI if needed)
-Adafruit_ST7789 lcd = Adafruit_ST7789(&mySPI, LCD_CS, LCD_DC, LCD_RST);
-
-
-
-
-
-
 using namespace sensesp;
 void setup() {
   SetupLogging(ESP_LOG_DEBUG);
-  mySPI.begin(LCD_SCLK, -1, LCD_MOSI, LCD_CS); // SCLK, MISO (not used), MOSI, SS/CS
-  lcd.init(135, 240);        // Width, Height
-  lcd.setRotation(0);        // Rotate screen if needed
-  lcd.fillScreen(ST77XX_BLACK);  // Clear screen to black
-  lcd.setCursor(0, 0);       // Set cursor position
-  lcd.setTextColor(ST77XX_WHITE);
-  lcd.setTextSize(2);
-  lcd.print("Hello, ideaspark");
   SensESPAppBuilder builder;
   sensesp_app = (&builder)
-                    ->set_hostname("my-sensesp-project")
+                    ->set_hostname("manxman-sensesp-project")
                     ->get_app();
   const unsigned int kAnalogInputReadInterval = 500;
 
-  const uint8_t kAnalogInputPin0 = 36;
-  const uint8_t kAnalogInputPin1 = 39;
-  const uint8_t kAnalogInputPin2 = 34;
-  const uint8_t kAnalogInputPin3 = 35;
-  
+  const uint8_t kAnalogInputPin0 = 0;  // GP0
+  const uint8_t kAnalogInputPin1 = 1;  // GP1
+  const uint8_t kAnalogInputPin2 = 2;  // GP2
+  const uint8_t kAnalogInputPin3 = 3;  // GP3
   
   // ONE
   // ONE sensor for raw ADC (scale = 1.0)
@@ -217,16 +190,9 @@ void setup() {
     loop();
   }
 }
+void loop() { event_loop()->tick(); }
 
-// ---- END of setup() ----
-// Start normal functions here:
-bool printed = false;  // Global variable
-void app_loop() {
-  event_loop()->tick();
 
-}
-void loop() {
-  while (true) {
-    app_loop();
-  }
-}
+
+
+
